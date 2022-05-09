@@ -1,0 +1,50 @@
+FUNCTION_BLOCK sensor_direita
+
+VAR_INPUT				// input variables
+	distancia : REAL;
+	velocidade : REAL;
+	cogumelo : REAL;
+END_VAR
+
+VAR_OUTPUT				// output variable
+	acao : REAL;
+END_VAR
+
+FUZZIFY distancia	// Fuzzify input variable 'distancia': {'near', 'medium' , 'far'}
+	TERM near := (0, 1) (1, 1) (2, 0) (3, 1) (4, 1) (5, 1) (6, 1) (7, 1) (8, 1) (9, 1) (10, 1); 
+	TERM medium := (0, 1) (1, 1) (2, 0) (3, 1) (4, 1) (5, 1) (6, 1) (7, 1) (8, 1) (9, 1) (10, 1); 
+	TERM far := (0, 1) (1, 1) (2, 0) (3, 1) (4, 1) (5, 1) (6, 1) (7, 1) (8, 1) (9, 1) (10, 1); 
+END_FUZZIFY
+
+FUZZIFY velocidade			// Fuzzify input variable 'velocidade': { 'slow', 'medium', 'fast' }
+	TERM slow := (0, 1) (1, 1) (2, 0) (3, 1) (4, 1) (5, 1) (6, 1) (7, 1) (8, 1) (9, 1) (10, 1); 
+	TERM medium := (0, 1) (1, 1) (2, 0) (3, 1) (4, 1) (5, 1) (6, 1) (7, 1) (8, 1) (9, 1) (10, 1); 
+	TERM fast := (0, 1) (1, 1) (2, 0) (3, 1) (4, 1) (5, 1) (6, 1) (7, 1) (8, 1) (9, 1) (10, 1); 
+END_FUZZIFY
+
+FUZZIFY cogumelo			// Fuzzify input variable 'cogumelo': { 'poisonous', 'none', 'edible' }
+	TERM poisonous := (0, 1) (1, 1) (2, 0) (3, 1) (4, 1) (5, 1) (6, 1) (7, 1) (8, 1) (9, 1) (10, 1); 
+	TERM none := (0, 1) (1, 1) (2, 0) (3, 1) (4, 1) (5, 1) (6, 1) (7, 1) (8, 1) (9, 1) (10, 1); 
+	TERM edible := (0, 1) (1, 1) (2, 0) (3, 1) (4, 1) (5, 1) (6, 1) (7, 1) (8, 1) (9, 1) (10, 1); 
+END_FUZZIFY
+
+DEFUZZIFY acao			// Defzzzify output variable 'acao' : {'no_action', 'destroy', 'pickup' }
+	TERM no_action := (0,0) (5,1) (10,0);
+	TERM destroy := (10,0) (15,1) (20,0);
+	TERM pickup := (20,0) (25,1) (30,0);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+RULEBLOCK No1
+	AND : MIN;			// Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
+	ACT : MIN;			// Use 'min' activation method //Truncate
+	ACCU : MAX;			// Use 'max' accumulation method //OR-Link
+
+	RULE 1 : IF cogumelo IS poisonous THEN acao IS destroy;
+	RULE 2 : IF cogumelo IS none THEN acao IS no_action; 
+	RULE 3 : IF cogumelo IS edible THEN acao IS pickup;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
+
