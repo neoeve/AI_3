@@ -15,7 +15,8 @@ public class NewInstances {
 
 	public void addInstance(String[] attributes) {
 		int nrAttr = database.numAttributes();
-		if (nrAttr == attributes.length+1) {
+		//if (nrAttr == attributes.length+1) {
+		if (nrAttr == attributes.length) {
 			double[] instancesValue = new double[nrAttr];
 			for (int i = 0; i < nrAttr-1; i++) {
 				instancesValue[i] = database.attribute(i).indexOfValue(attributes[i]);
