@@ -17,7 +17,7 @@ public class Visualizer {
 
 	public void start(J48 tree) {
 		final javax.swing.JFrame jf = new javax.swing.JFrame("Weka Classifier Tree Visualizer: J48");
-		jf.setSize(500, 400);
+		jf.setSize(1000, 1000);
 		jf.getContentPane().setLayout(new BorderLayout());
 		TreeVisualizer tv;
 		try {
